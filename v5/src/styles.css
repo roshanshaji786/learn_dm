@@ -38,7 +38,7 @@
     --ok: #34d399;
     --warn: #fbbf24;
     --bad: #f87171;
-    --wa: #25d366;
+    --wa: #0b7a3e;
     --shadow: 0 1px 2px rgb(0 0 0 / 30%), 0 8px 24px rgb(0 0 0 / 30%);
     color-scheme: dark;
   }
@@ -55,7 +55,7 @@
   --ok: #34d399;
   --warn: #fbbf24;
   --bad: #f87171;
-  --wa: #25d366;
+  --wa: #0b7a3e;
   --shadow: 0 1px 2px rgb(0 0 0 / 30%), 0 8px 24px rgb(0 0 0 / 30%);
   color-scheme: dark;
 }
