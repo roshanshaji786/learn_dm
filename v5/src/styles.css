@@ -289,7 +289,7 @@ p { margin: 0; }
 /* Admin */
 .admin-main { padding-top: 12px; padding-bottom: calc(96px + var(--bottom)); }
 .tabbar {
-  position: fixed; left: 0; right: 0; bottom: 0; z-index: 40; display: grid; grid-template-columns: repeat(3, 1fr);
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 40; display: grid; grid-template-columns: repeat(4, 1fr);
   background: color-mix(in srgb, var(--bg) 94%, transparent); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
   border-top: 1px solid var(--line); padding-bottom: var(--bottom);
 }
@@ -345,3 +345,22 @@ p { margin: 0; }
   .kpis { grid-template-columns: repeat(4, 1fr); }
   .list.wide { grid-template-columns: 1fr 1fr; }
 }
+
+/* Registration form (/register) */
+.reg { max-width: 560px; padding-top: 18px; padding-bottom: calc(40px + var(--bottom)); }
+.reg h1 { font: 800 28px/1.2 var(--display); margin: 6px 0 6px; }
+.reg > .muted { color: var(--muted); margin-bottom: 14px; }
+.reg-eyebrow { display: inline-block; font-size: 13px; font-weight: 700; color: var(--brand); background: var(--bg-soft); padding: 6px 10px; border-radius: 99px; }
+.reg form.card { padding: 18px 16px; }
+.reg fieldset { border: 0; padding: 0; min-width: 0; }
+.reg legend, .reg .field label { font-size: 15px; font-weight: 700; padding: 0; margin-bottom: 8px; }
+.reg small { display: block; font-weight: 500; font-size: 13px; color: var(--muted); }
+.reg .field { margin-bottom: 18px; }
+.opts { display: flex; flex-wrap: wrap; gap: 8px; }
+.opts button { min-height: 42px; padding: 8px 14px; border-radius: 12px; border: 1px solid var(--line); background: var(--bg); color: var(--text); font-size: 15px; cursor: pointer; text-align: left; }
+.opts button[aria-pressed='true'] { background: var(--brand); border-color: var(--brand); color: #fff; font-weight: 600; }
+.reg-done { display: grid; gap: 12px; text-align: center; justify-items: center; padding: 28px 18px; margin-top: 12px; }
+.reg-done > svg { color: var(--ok); }
+.reg-done .muted { color: var(--muted); }
+.funnel .bar-row { grid-template-columns: minmax(110px, 42%) 1fr 32px; }
+.funnel .bar-row span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }

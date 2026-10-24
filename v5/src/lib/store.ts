@@ -4,7 +4,8 @@ import { BATCH_START, CHECKOUT_URL, SEATS_TOTAL, WHATSAPP, type Lang } from '../
 import { getPref, setPref } from './storage'
 import { hasBackend, pub, supabase, type Lead } from './supabase'
 
-export type Route = { view: 'home' } | { view: 'admin'; tab: 'leads' | 'students' | 'stats' }
+export type AdminTab = 'leads' | 'students' | 'forms' | 'stats'
+export type Route = { view: 'home' } | { view: 'register' } | { view: 'admin'; tab: AdminTab }
 export type Theme = 'system' | 'light' | 'dark'
 export type Sheet = null | 'join' | 'ask' | 'login'
 
@@ -12,8 +13,10 @@ export function parseHash(hash = location.hash): Route {
   const h = hash.replace(/^#\/?/, '')
   if (h.startsWith('admin')) {
     const tab = h.split('/')[1]
-    return { view: 'admin', tab: tab === 'students' || tab === 'stats' ? tab : 'leads' }
+    return { view: 'admin', tab: tab === 'students' || tab === 'forms' || tab === 'stats' ? tab : 'leads' }
   }
+  // The form is shared as /register; #register works too.
+  if (h === 'register' || (!h && location.pathname.replace(/\/$/, '') === '/register')) return { view: 'register' }
   return { view: 'home' }
 }
 

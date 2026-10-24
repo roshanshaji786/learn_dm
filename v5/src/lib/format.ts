@@ -31,3 +31,13 @@ export function prettyPhone(d: string) {
 }
 
 export const waLink = (phone: string, text: string) => `https://wa.me/${phone}?text=${encodeURIComponent(text)}`
+
+// Ad attribution from the landing URL, kept short for the utm column.
+export function utmFromUrl() {
+  const q = new URLSearchParams(location.search)
+  const parts = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content']
+    .map((k) => (q.get(k) ? `${k.slice(4)}=${q.get(k)}` : ''))
+    .filter(Boolean)
+  if (q.get('fbclid')) parts.push('fb')
+  return parts.join('&').slice(0, 200) || null
+}

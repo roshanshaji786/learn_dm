@@ -1,8 +1,9 @@
 import { useEffect } from 'react'
-import { BarChart3, GraduationCap, Users } from 'lucide-react'
+import { BarChart3, ClipboardList, GraduationCap, Users } from 'lucide-react'
 import { TopBar } from '../components/TopBar'
-import { useStore } from '../lib/store'
+import { useStore, type AdminTab } from '../lib/store'
 import { hasBackend } from '../lib/supabase'
+import Forms from './admin/Forms'
 import Leads from './admin/Leads'
 import { Login } from './admin/Login'
 import Stats from './admin/Stats'
@@ -11,10 +12,11 @@ import Students from './admin/Students'
 const tabs = [
   { id: 'leads', label: 'Leads', icon: Users },
   { id: 'students', label: 'Students', icon: GraduationCap },
+  { id: 'forms', label: 'Forms', icon: ClipboardList },
   { id: 'stats', label: 'Stats', icon: BarChart3 },
 ] as const
 
-export default function Admin({ tab }: { tab: 'leads' | 'students' | 'stats' }) {
+export default function Admin({ tab }: { tab: AdminTab }) {
   const { isAdmin, session, checkAdmin, loadLeads, leads } = useStore()
 
   useEffect(() => {
@@ -47,6 +49,7 @@ export default function Admin({ tab }: { tab: 'leads' | 'students' | 'stats' }) 
         <main className="wrap admin-main" id="main">
           {tab === 'leads' && <Leads />}
           {tab === 'students' && <Students />}
+          {tab === 'forms' && <Forms />}
           {tab === 'stats' && <Stats />}
         </main>
         <nav className="tabbar" aria-label="Admin">

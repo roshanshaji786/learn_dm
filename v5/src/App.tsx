@@ -7,6 +7,7 @@ import { supabase } from './lib/supabase'
 import Home from './views/Home'
 
 const Admin = lazy(() => import('./views/Admin'))
+const Register = lazy(() => import('./views/Register'))
 
 export default function App() {
   const { route, setRoute, sheet, loadSettings, checkAdmin } = useStore()
@@ -46,6 +47,13 @@ export default function App() {
         <Suspense fallback={<TopBar />}>
           <Admin tab={route.tab} />
         </Suspense>
+      ) : route.view === 'register' ? (
+        <>
+          <TopBar />
+          <Suspense fallback={null}>
+            <Register />
+          </Suspense>
+        </>
       ) : (
         <>
           <TopBar />

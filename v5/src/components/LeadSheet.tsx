@@ -1,18 +1,9 @@
 import { useState } from 'react'
 import { ui } from '../data/content'
-import { normalisePhone, waLink } from '../lib/format'
+import { normalisePhone, utmFromUrl, waLink } from '../lib/format'
 import { useStore } from '../lib/store'
 import { hasBackend, pub } from '../lib/supabase'
 import { Sheet, WhatsAppIcon } from './ui'
-
-function utmFromUrl() {
-  const q = new URLSearchParams(location.search)
-  const parts = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content']
-    .map((k) => (q.get(k) ? `${k.slice(4)}=${q.get(k)}` : ''))
-    .filter(Boolean)
-  if (q.get('fbclid')) parts.push('fb')
-  return parts.join('&').slice(0, 200) || null
-}
 
 export function LeadSheet({ mode }: { mode: 'join' | 'ask' }) {
   const { lang, settings, openSheet } = useStore()
