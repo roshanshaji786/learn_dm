@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { LogOut, KeyRound } from 'lucide-react'
-import { supabase, errText } from '../../lib/supabase'
+import { supabase, errText, callAdmin } from '../../lib/supabase'
 import { useStore } from '../../lib/store'
 import { go } from '../../lib/route'
 import { useTitle, Field, ThemeSeg } from '../../components/ui'
@@ -12,6 +12,7 @@ export default function Settings() {
   const say = useStore((s) => s.say)
   const [f, setF] = useState({ academy_name: settings.academy_name ?? '', whatsapp: settings.whatsapp ?? '', upi_id: settings.upi_id ?? '' })
   const [pw, setPw] = useState('')
+  const [pin, setPin] = useState('')
   const [busy, setBusy] = useState(false)
 
   async function save(e: React.FormEvent) {
@@ -56,7 +57,30 @@ export default function Settings() {
       <ThemeSeg />
 
       <h2 className="h-sub">
-        <KeyRound size={18} /> Your password
+        <KeyRound size={18} /> Admin PIN
+      </h2>
+      <form
+        onSubmit={async (e) => {
+          e.preventDefault()
+          try {
+            await callAdmin('set_pin', { pin })
+            setPin('')
+            say('Admin PIN changed')
+          } catch (err) {
+            say(errText(err), true)
+          }
+        }}
+      >
+        <Field label="New admin PIN (4 to 8 digits)" hint="5 wrong tries lock PIN login for 15 minutes; 20 block it until you set a new one here (you can still log in with email + password).">
+          <input type="password" inputMode="numeric" value={pin} onChange={(e) => setPin(e.target.value.replace(/\D/g, '').slice(0, 8))} />
+        </Field>
+        <button className="btn btn-ghost btn-block" disabled={pin.length < 4}>
+          Change PIN
+        </button>
+      </form>
+
+      <h2 className="h-sub">
+        <KeyRound size={18} /> Email login password
       </h2>
       <form onSubmit={changePw}>
         <input type="email" autoComplete="username" value={session?.user.email ?? ''} readOnly hidden />

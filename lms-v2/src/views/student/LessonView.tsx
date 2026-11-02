@@ -6,6 +6,7 @@ import { useStore } from '../../lib/store'
 import { useT } from '../../lib/i18n'
 import { when, embedUrl, dayYear } from '../../lib/format'
 import { useTitle, Field, Spinner } from '../../components/ui'
+import { LessonFiles } from '../../components/Files'
 import type { LessonContent } from '../../lib/types'
 import { type StudentData, joinOpen, joinClass, gcalLink } from './data'
 
@@ -128,6 +129,8 @@ export default function LessonView({ id, d, reload }: { id: string; d: StudentDa
               </div>
             </>
           )}
+
+          <LessonFiles lessonId={id} title={t('files')} />
 
           {l.has_assignment && <Assignment d={d} lessonId={id} text={content?.assign_text ?? ''} max={l.assign_max} dueDays={l.assign_due_days} opensAt={s.opens_at} reload={reload} />}
 

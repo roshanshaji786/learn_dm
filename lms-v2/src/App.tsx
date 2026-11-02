@@ -22,7 +22,7 @@ export default function App() {
   if (!hasBackend) view = <div className="wrap app-main">This app needs its Supabase settings.</div>
   else if (p0 === 'course') view = <CoursePage slug={rest[0] ?? ''} />
   else if (p0 === 'verify') view = <Verify code={rest[0] ?? query.get('id') ?? ''} />
-  else if (p0 === 'login') view = <Login next={query.get('next') ?? ''} />
+  else if (p0 === 'login') view = <Login next={query.get('next') ?? ''} admin={query.get('as') === 'admin'} />
   else if (p0 === 'app' || p0 === 'admin') {
     if (!ready) view = <Spinner />
     else if (!session) view = <Login next={'/' + parts.join('/')} />

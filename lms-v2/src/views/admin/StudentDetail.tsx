@@ -34,10 +34,13 @@ export default function StudentDetail({ id }: { id: string }) {
   if (!p) return <p>Student not found.</p>
 
   async function resetPw() {
-    if (!confirm(`Make a new temporary password for ${p!.name}? Their current password stops working.`)) return
+    if (!p!.phone) return say('Add their WhatsApp number first (edit ✏️)', true)
+    const want = prompt(`New PIN for ${p!.name} (4 to 8 digits). Leave empty for a random one. Their old PIN stops working.`, '')
+    if (want === null) return
     try {
-      const r = await callAdmin<{ temp_password: string }>('reset_password', { user_id: p!.user_id })
-      setSheet({ k: 'pw', msg: loginMessage(p!.name, p!.email, r.temp_password) })
+      const r = await callAdmin<{ pin: string }>('set_pin', { user_id: p!.user_id, pin: want.trim() })
+      setSheet({ k: 'pw', msg: loginMessage(p!.name, p!.phone, r.pin) })
+      await reload()
     } catch (e) {
       say(errText(e), true)
     }
@@ -62,14 +65,16 @@ export default function StudentDetail({ id }: { id: string }) {
       </div>
       <div className="card">
         <dl className="dl">
-          <dt>Email</dt>
-          <dd>{p.email}</dd>
-          <dt>WhatsApp</dt>
+          <dt>WhatsApp (login)</dt>
           <dd>{p.phone || '—'}</dd>
+          {!p.email.endsWith('@students.roshanshaji.com') && (
+            <>
+              <dt>Email</dt>
+              <dd>{p.email}</dd>
+            </>
+          )}
           <dt>Joined</dt>
           <dd>{dayYear(p.created_at)}</dd>
-          <dt>Password</dt>
-          <dd>{p.must_change_password ? 'Temporary (not changed yet)' : 'Set by student'}</dd>
         </dl>
         {p.note && <p className="small muted mt12">{p.note}</p>}
         <div className="row mt12">
@@ -77,7 +82,7 @@ export default function StudentDetail({ id }: { id: string }) {
             <MessageCircle size={16} /> WhatsApp
           </a>
           <button className="btn btn-sm btn-ghost grow" onClick={resetPw}>
-            <KeyRound size={16} /> New password
+            <KeyRound size={16} /> New PIN
           </button>
         </div>
       </div>
@@ -209,7 +214,7 @@ export default function StudentDetail({ id }: { id: string }) {
       {sheet?.k === 'fee' && <EditFee e={sheet.e} onClose={() => setSheet(null)} onDone={reload} />}
       {sheet?.k === 'enrol' && <Enrol p={p} courses={data.courses.filter((c) => !data.enrolments.some((e) => e.course_id === c.id))} onClose={() => setSheet(null)} onDone={reload} />}
       {sheet?.k === 'pw' && (
-        <Sheet title="New temporary password" onClose={() => setSheet(null)}>
+        <Sheet title="New PIN" onClose={() => setSheet(null)}>
           <pre className="card prose small" style={{ margin: 0 }}>
             {sheet.msg}
           </pre>

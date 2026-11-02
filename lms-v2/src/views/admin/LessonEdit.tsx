@@ -6,6 +6,7 @@ import { useStore } from '../../lib/store'
 import { go } from '../../lib/route'
 import { toLocalInput, fromLocalInput } from '../../lib/format'
 import { useTitle, Skel, Field } from '../../components/ui'
+import { AdminFiles } from '../../components/Files'
 import type { Lesson, LessonContent, Module, UnlockMode } from '../../lib/types'
 
 type Form = Omit<Lesson, 'id' | 'live_start' | 'unlock_at'> & { live_start: string; unlock_at: string } & Omit<LessonContent, 'lesson_id'>
@@ -184,6 +185,13 @@ export default function LessonEdit({ id, moduleId }: { id: string | null; module
           )}
           <p className="small muted">Students with an overdue fee can't open any lesson until they pay.</p>
         </div>
+
+        {id && (
+          <>
+            <h2 className="h-sub">Files (notes, PDFs, slides)</h2>
+            <AdminFiles lessonId={id} />
+          </>
+        )}
 
         <h2 className="h-sub">Notes</h2>
         <div className="card">

@@ -160,6 +160,8 @@ export default function Me({ d, reload }: { d: StudentData; reload: () => Promis
       <h2 className="h-sub">{t('theme')}</h2>
       <ThemeSeg />
 
+      {profile.must_change_password && (
+        <>
       <h2 className="h-sub">
         <KeyRound size={18} /> {t('changePw')}
       </h2>
@@ -173,6 +175,9 @@ export default function Me({ d, reload }: { d: StudentData; reload: () => Promis
           {t('save')}
         </button>
       </form>
+
+        </>
+      )}
 
       <h2 className="h-sub">
         <Smartphone size={18} /> {t('install')}

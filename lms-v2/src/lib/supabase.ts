@@ -32,6 +32,20 @@ export async function callAdmin<T = Record<string, unknown>>(action: string, pay
   return body as T
 }
 
+// PIN login: the server checks the PIN and returns a one-time token, exchanged here for a normal session.
+export async function pinLogin(role: 'admin' | 'student', pin: string, phone = '') {
+  const res = await fetch(`${SUPABASE_URL}/functions/v1/lms-admin`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', apikey: key ?? '' },
+    body: JSON.stringify({ action: 'pin_login', role, pin, phone }),
+  })
+  const body = await res.json().catch(() => ({}))
+  if (!res.ok || !body.token_hash) throw new Error(body.error || 'Login failed')
+  const { data, error } = await supabase.auth.verifyOtp({ token_hash: body.token_hash, type: 'email' })
+  if (error || !data.session) throw new Error(error?.message || 'Login failed')
+  return data.session
+}
+
 export function errText(e: unknown): string {
   if (!e) return 'Something went wrong'
   if (typeof e === 'string') return e

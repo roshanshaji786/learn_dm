@@ -41,12 +41,12 @@ export async function loadCourseTree(courseId?: string) {
 
 export type { Course, Enrolment, Lesson, Module, Payment, Profile, Submission, WaGroup }
 
-export function loginMessage(name: string, email: string, password: string) {
+export function loginMessage(name: string, phone: string, pin: string) {
   return `Hi ${name.split(' ')[0]}, welcome to Darts AI Academy! 🎉
 
 Your learning app: https://lms.roshanshaji.com/#/login
-Email: ${email}
-Temporary password: ${password}
+WhatsApp number: ${phone.replace(/\D/g, '').slice(-10)}
+PIN: ${pin}
 
-Log in, then set your own password under "Me". Add the app to your home screen so classes are one tap away.`
+Your classes, recordings, notes, assignments and fee receipts are all there. Add the app to your home screen so classes are one tap away. Please keep your PIN private.`
 }

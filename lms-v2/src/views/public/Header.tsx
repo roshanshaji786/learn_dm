@@ -38,6 +38,7 @@ export function PublicFooter() {
         <span className="row" style={{ gap: 14 }}>
           <a href="https://roshanshaji.com" rel="noopener">roshanshaji.com</a>
           <a href="#/verify">{t('verify')}</a>
+          <a href="#/login?as=admin">{t('admin')}</a>
           <a href="https://wa.me/917012045854" rel="noopener">WhatsApp +91 70120 45854</a>
         </span>
         <span>© {new Date().getFullYear()} DanRosh Tech Solutions</span>
