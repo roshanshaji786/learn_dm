@@ -1,0 +1,60 @@
+.dlms-admin{max-width:1280px}
+.dlms-admin-head{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin:8px 0 12px}
+.dlms-admin-head h1{margin:0}
+.dlms-muted{color:#646970}
+.dlms-ok{color:#007017;font-weight:600}
+.dlms-err{color:#b32d2e;font-weight:600}
+.dlms-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px;margin:12px 0 18px}
+.dlms-stat{background:#fff;border:1px solid #dcdcde;border-radius:10px;padding:14px 16px}
+.dlms-stat>span{display:block;color:#646970;font-size:12px;text-transform:uppercase;letter-spacing:.03em;margin-bottom:4px}
+.dlms-stat strong{font-size:22px}
+.dlms-stat a{text-decoration:none}
+.dlms-grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media (max-width:1100px){.dlms-grid2{grid-template-columns:1fr}}
+.dlms-panel{background:#fff;border:1px solid #dcdcde;border-radius:10px;padding:16px 20px;margin:0 0 16px}
+.dlms-panel h2{margin:0 0 12px;font-size:16px}
+.dlms-panel h3{font-size:14px}
+.dlms-filters{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:0 0 14px}
+.dlms-form-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px 18px;align-items:start}
+.dlms-form-grid.one{grid-template-columns:1fr}
+.dlms-form-grid label{display:flex;flex-direction:column;gap:4px;font-weight:600}
+.dlms-form-grid label small{font-weight:400;color:#646970}
+.dlms-form-grid input:not([type=checkbox]),.dlms-form-grid select,.dlms-form-grid textarea{width:100%;max-width:none}
+.dlms-form-grid .wide,.dlms-form-grid fieldset.wide{grid-column:1/-1}
+.dlms-form-grid label.check{flex-direction:row;align-items:center;font-weight:400}
+.dlms-form-grid fieldset{border:1px solid #e0e0e0;border-radius:8px;padding:8px 12px 12px;display:flex;flex-direction:column;gap:8px}
+.dlms-form-grid legend{font-weight:600;padding:0 6px}
+.dlms-row{display:flex;gap:8px}
+.dlms-row>*{flex:1}
+.dlms-lesson{border:1px solid #e0e0e0;border-radius:8px;margin:0 0 8px;background:#fcfcfc}
+.dlms-lesson summary{padding:10px 14px;cursor:pointer}
+.dlms-lesson[open] summary{border-bottom:1px solid #e0e0e0}
+.dlms-lesson .dlms-form-grid{padding:12px 14px}
+.dlms-topic{margin:18px 0 8px;color:#50575e}
+.dlms-sticky{position:sticky;bottom:0;background:rgba(240,240,241,.95);padding:10px 0;margin:0;z-index:5}
+.dlms-checks{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:6px 18px;margin-bottom:12px}
+.dlms-checks label{font-weight:400}
+.dlms-wa{color:#128c3a;text-decoration:none;font-size:12px}
+.dlms-wa::before{content:"● "}
+.dlms-del{color:#b32d2e}
+.dlms-pill{display:inline-block;font-size:11px;font-weight:600;padding:2px 8px;border-radius:999px;background:#f0f0f1}
+.dlms-state-live,.dlms-state-open{background:#fde8e8;color:#b32d2e}
+.dlms-state-upcoming{background:#e7f0fb;color:#135e96}
+.dlms-state-submitted{background:#fcf0dc;color:#8a5a00}
+.dlms-state-graded{background:#e5f5e8;color:#007017}
+.dlms-bar{height:6px;background:#f0f0f1;border-radius:9px;overflow:hidden;width:110px;margin-bottom:2px}
+.dlms-bar span{display:block;height:100%;background:#7c3aed}
+.dlms-sub-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}
+.dlms-answer{background:#f6f7f7;border-radius:6px;padding:4px 12px;margin:10px 0}
+.dlms-grade-form{display:flex;flex-wrap:wrap;gap:10px;align-items:flex-end;margin-top:10px}
+.dlms-grade-form label{display:flex;flex-direction:column;font-weight:600;gap:3px}
+.dlms-grade-form input[type=number]{width:90px}
+.dlms-grade-form .grow{flex:1;min-width:240px}
+.dlms-grade-form textarea{width:100%}
+.dlms-revoked td{opacity:.5;text-decoration:line-through}
+.dlms-checklist{list-style:none;margin:0;padding:0}
+.dlms-checklist li{padding:4px 0}
+.dlms-checklist li.done a{color:#646970;text-decoration:line-through}
+.dlms-steps li{margin-bottom:4px}
+.dlms-table-admin td{vertical-align:top}
+.dlms-form-grid select[multiple]{min-height:96px}.dlms-sticky{background:#f0f0f1}

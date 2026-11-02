@@ -1,0 +1,7 @@
+{
+    "name": "dartsai/darts-lms-pro",
+    "type": "wordpress-plugin",
+    "require": {
+        "dompdf/dompdf": "^3.0"
+    }
+}
