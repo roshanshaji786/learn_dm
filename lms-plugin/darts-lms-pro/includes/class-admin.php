@@ -437,6 +437,7 @@ class DLMS_Admin {
 			echo '<option value="' . (int) $c->ID . '"' . selected( (int) $m( 'credit_to' ), (int) $c->ID, false ) . '>' . esc_html( $c->post_title ) . '</option>';
 		}
 		echo '</select><small>E.g. the 15-day course fee is credited to the AI Business Builder. Students get a personal coupon.</small></label>';
+		echo '<label>How students enrol<select name="course[enrol_wa]"><option value="">Normal Tutor enrol / checkout</option><option value="1"' . selected( $m( 'enrol_wa' ), '1', false ) . '>On WhatsApp: you send the UPI QR and enrol them</option></select><small>WhatsApp mode hides the Enrol button and shows "Enrol on WhatsApp".</small></label>';
 		echo '<label>Certificate<select name="course[cert_off]"><option value="">Issue automatically on completion</option><option value="1"' . selected( $m( 'cert_off' ), '1', false ) . '>No certificate</option></select></label>';
 		echo '<label>Minimum attendance for certificate (%)<input type="number" min="0" max="100" name="course[cert_min_attend]" value="' . esc_attr( $m( 'cert_min_attend' ) ) . '" placeholder="0"></label>';
 		echo '</div></div>';

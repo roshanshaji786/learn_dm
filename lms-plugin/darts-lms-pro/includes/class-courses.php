@@ -26,6 +26,7 @@ class DLMS_Courses {
 			'credit_to'       => 'int',
 			'cert_off'        => 'bool',
 			'cert_min_attend' => 'int',
+			'enrol_wa'        => 'bool',
 		);
 	}
 
@@ -55,6 +56,56 @@ class DLMS_Courses {
 		add_action( 'tutor_after_enrolled', array( __CLASS__, 'on_enrolled' ), 20, 3 );
 		add_filter( 'tutor_allow_course_enrollment', array( __CLASS__, 'check_prereq' ), 10, 2 );
 		add_action( 'transition_post_status', array( __CLASS__, 'lesson_published' ), 10, 3 );
+		add_filter( 'tutor_allow_course_enrollment', array( __CLASS__, 'check_wa_only' ), 5, 2 );
+		add_filter( 'tutor/course/single/entry-box/free', array( __CLASS__, 'wa_box' ), 20, 2 );
+		add_filter( 'tutor/course/single/entry-box/purchasable', array( __CLASS__, 'wa_box' ), 20, 2 );
+	}
+
+	/**
+	 * "Enrol on WhatsApp" courses: students talk to you, pay by UPI and you enrol them.
+	 *
+	 * @param int $course_id Course.
+	 */
+	public static function is_wa_only( $course_id ) {
+		return (bool) dlms_meta( $course_id, 'enrol_wa' );
+	}
+
+	/**
+	 * Block self-enrolment on WhatsApp-only courses.
+	 *
+	 * @param mixed $allow     Allow.
+	 * @param int   $course_id Course.
+	 */
+	public static function check_wa_only( $allow, $course_id ) {
+		if ( is_wp_error( $allow ) || current_user_can( 'manage_options' ) || ! self::is_wa_only( $course_id ) ) {
+			return $allow;
+		}
+		return new WP_Error( 'dlms_wa_only', dlms_t( 'Enrolment for this course is on WhatsApp. Tap "Enrol on WhatsApp" and we will help you.' ) );
+	}
+
+	/**
+	 * Replace Tutor's enrol box on WhatsApp-only courses.
+	 *
+	 * @param string $html      Html.
+	 * @param int    $course_id Course.
+	 */
+	public static function wa_box( $html, $course_id ) {
+		if ( ! self::is_wa_only( $course_id ) ) {
+			return $html;
+		}
+		$title = get_the_title( $course_id );
+		$fee   = self::fee( $course_id );
+		$wa    = dlms_opt( 'whatsapp' );
+		$out   = '<div class="dlms-wa-enrol">';
+		if ( $fee > 0 ) {
+			$out .= '<div class="dlms-wa-enrol-price"><strong>' . esc_html( dlms_money( $fee ) ) . '</strong><span>' . esc_html( dlms_t( 'full program fee' ) ) . '</span></div>';
+		}
+		if ( $wa ) {
+			$out .= '<a class="tutor-btn tutor-btn-primary tutor-btn-lg tutor-btn-block dlms-wa-enrol-btn" target="_blank" rel="noopener" href="' . esc_url( dlms_wa_link( $wa, sprintf( 'Hi Roshan, I want to enrol in %s', $title ) ) ) . '">' . esc_html( dlms_t( 'Enrol on WhatsApp' ) ) . '</a>';
+			$out .= '<a class="tutor-btn tutor-btn-outline-primary tutor-btn-lg tutor-btn-block dlms-wa-enrol-btn" target="_blank" rel="noopener" href="' . esc_url( dlms_wa_link( $wa, sprintf( 'Hi Roshan, I have a question about %s', $title ) ) ) . '">' . esc_html( dlms_t( 'Ask a question' ) ) . '</a>';
+		}
+		$out .= '<p class="dlms-wa-enrol-note">' . esc_html( dlms_t( 'Talk to us on WhatsApp first. We send the UPI payment QR there, and your login comes right after payment.' ) ) . '</p></div>';
+		return $out;
 	}
 
 	/**

@@ -3,7 +3,7 @@
  * Plugin Name:       Darts LMS Pro
  * Plugin URI:        https://learn.roshanshaji.com
  * Description:       Free add-on for Tutor LMS: live Google Meet classes, recordings, part payments and receipts, drip and prerequisites, assignments, attendance, certificates, gradebook, reminders, bundles and course credit, Malayalam switch, content protection, installable app and an admin dashboard.
- * Version:           1.0.0
+ * Version:           1.1.0
  * Requires at least: 6.4
  * Requires PHP:      8.0
  * Requires Plugins:  tutor
@@ -16,7 +16,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'DLMS_VERSION', '1.0.0' );
+define( 'DLMS_VERSION', '1.1.0' );
 define( 'DLMS_DB_VERSION', '2' );
 define( 'DLMS_FILE', __FILE__ );
 define( 'DLMS_DIR', plugin_dir_path( __FILE__ ) );
