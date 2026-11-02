@@ -20,7 +20,13 @@ Live: https://lms.roshanshaji.com · Admin: https://lms.roshanshaji.com/#/admin
 
 ## Logins
 
-There is no email sending. Adding a student creates the login with a temporary password and shows a WhatsApp message to send it. Students set their own password under Me. "New password" on a student makes a fresh temporary one.
+- **Admin:** PIN only (Login → Admin, or `#/login?as=admin`). Change it in Admin → Settings.
+- **Students:** WhatsApp number + PIN. Adding a student sets a PIN (random or chosen) and shows a WhatsApp message to send it; "New PIN" on a student replaces it. Email is optional.
+- PINs are bcrypt-hashed in `lms_private.pins`, checked by the `lms-admin` edge function (`pin_login`), which returns a one-time token the app exchanges for a session. 5 wrong tries lock PIN login for 15 minutes; 20 block it until a new PIN is set. Email + password login still works as a fallback.
+
+## Lesson files
+
+Admin → Courses → lesson → Files: upload notes, PDFs, slides or short videos (50 MB per file on the free plan) to the private `lms-materials` bucket, in a folder per lesson. Students see and download them only when the lesson is open for them. Long class recordings belong on YouTube (unlisted) or Google Drive, pasted as the recording link.
 
 ## Shared Supabase project
 
