@@ -58,3 +58,17 @@
 .dlms-steps li{margin-bottom:4px}
 .dlms-table-admin td{vertical-align:top}
 .dlms-form-grid select[multiple]{min-height:96px}.dlms-sticky{background:#f0f0f1}
+
+.dlms-wa-top{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:12px}
+.dlms-wa-top strong{font-size:18px}
+.dlms-wa-preview{background:#f6f7f7;border-left:4px solid #25d366;border-radius:6px;padding:8px 12px;margin:0 0 12px}
+.dlms-wa-preview pre{white-space:pre-wrap;font-family:inherit;margin:4px 0 0}
+.dlms-wa-table td{vertical-align:middle}
+.dlms-wa-actions{white-space:nowrap;text-align:right}
+@media (max-width:782px){.dlms-wa-actions{white-space:normal;text-align:left}}
+.dlms-wa-pending{background:#e7f0fb;color:#135e96}
+.dlms-wa-queued{background:#fcf0dc;color:#8a5a00}
+.dlms-wa-sent{background:#e5f5e8;color:#007017}
+.dlms-wa-skipped{background:#f0f0f1;color:#646970}
+.dlms-wa-failed,.dlms-wa-no_phone{background:#fde8e8;color:#b32d2e}
+.dlms-wa-tabs{margin-bottom:12px}

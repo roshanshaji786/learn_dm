@@ -17,7 +17,7 @@
 defined( 'ABSPATH' ) || exit;
 
 define( 'DLMS_VERSION', '1.0.0' );
-define( 'DLMS_DB_VERSION', '1' );
+define( 'DLMS_DB_VERSION', '2' );
 define( 'DLMS_FILE', __FILE__ );
 define( 'DLMS_DIR', plugin_dir_path( __FILE__ ) );
 define( 'DLMS_URL', plugin_dir_url( __FILE__ ) );
@@ -41,6 +41,7 @@ $dlms_files = array(
 	'class-protect',
 	'class-pwa',
 	'class-hub',
+	'class-whatsapp',
 	'class-admin',
 );
 foreach ( $dlms_files as $dlms_file ) {
@@ -77,6 +78,7 @@ add_action(
 		DLMS_Assignments::init();
 		DLMS_Reports::init();
 		DLMS_Hub::init();
+		DLMS_WhatsApp::init();
 		if ( is_admin() ) {
 			DLMS_Admin::init();
 		}

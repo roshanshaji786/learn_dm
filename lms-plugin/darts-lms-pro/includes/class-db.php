@@ -171,6 +171,27 @@ class DLMS_DB {
 		) $c;"
 		);
 
+		dbDelta(
+			'CREATE TABLE ' . self::t( 'wa_queue' ) . " (
+			id bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+			campaign varchar(20) NOT NULL,
+			kind varchar(10) NOT NULL DEFAULT 'user',
+			user_id bigint(20) unsigned NOT NULL DEFAULT 0,
+			target varchar(255) NOT NULL DEFAULT '',
+			label varchar(191) NOT NULL DEFAULT '',
+			message text NOT NULL,
+			link varchar(500) NOT NULL DEFAULT '',
+			status varchar(20) NOT NULL DEFAULT 'pending',
+			error varchar(255) NOT NULL DEFAULT '',
+			created_at datetime NOT NULL,
+			sent_at datetime DEFAULT NULL,
+			created_by bigint(20) unsigned NOT NULL DEFAULT 0,
+			PRIMARY KEY  (id),
+			KEY campaign (campaign),
+			KEY status (status)
+		) $c;"
+		);
+
 		update_option( 'dlms_db_version', DLMS_DB_VERSION );
 	}
 

@@ -15,6 +15,7 @@ A free WordPress plugin that adds "Pro" features to the free **Tutor LMS**, buil
 | Gradebook | Progress, quiz average, assignment average, attendance and balance per student, CSV export |
 | Notifications | Welcome with set-password link, enrolment, receipt, class reminder, fee reminders, assignment marked, certificate, new lesson (optional), and pre-filled WhatsApp messages in the admin |
 | Bundles and credit | Enrolling in one course can enrol in others; a course fee can count as credit toward another course (personal WooCommerce coupon, or applied automatically on manual enrolment) |
+| WhatsApp | Send any link (Meet, lesson, recording, form, payment) to a course, students with dues, picked students, or your saved batch groups. Free mode opens WhatsApp with each personalised message ready and you tap Send ("Send next" walks the list, rows tick as you go). Optional automatic sending to students through the paid WhatsApp Cloud API. Sent history per campaign |
 | Students | "My Learning Hub" in the Tutor dashboard: upcoming classes with Join, progress, payments and receipts, assignments, certificates, a WhatsApp help button |
 | Language | EN / മലയാളം switch (`?lang=ml`) for the plugin's screens and common Tutor labels |
 | Protection | No right-click or copy on lesson pages, and a moving watermark with the student's name and phone on videos |
@@ -39,6 +40,7 @@ A free WordPress plugin that adds "Pro" features to the free **Tutor LMS**, buil
 - **Students & payments**: enrol someone who paid by UPI, record later instalments, open receipts, message on WhatsApp.
 - **Live classes**: see each class, then tick attendance.
 - **Assignments**: mark and give feedback.
+- **WhatsApp**: paste a link, pick a template, choose students and/or groups, then "Prepare messages" and tap through. Save batch groups under WhatsApp → Groups. Live classes has a "Send on WhatsApp" button per class.
 - **Gradebook** and **Certificates**: track results and export CSVs.
 
 ## Build the zip
@@ -52,6 +54,7 @@ The `vendor/` folder (Dompdf) isn't committed. `build.sh` installs it with Compo
 ## Notes
 
 - Works with Tutor LMS 4.x (tested on 4.2.0) and WordPress 6.4+ / PHP 8.0+.
-- Data lives in five tables (`wp_dlms_*`) plus `_dlms_*` post meta. Deactivating the plugin keeps all data.
+- Data lives in six tables (`wp_dlms_*`) plus `_dlms_*` post meta. Deactivating the plugin keeps all data.
 - Assignment files go to `wp-content/uploads/dlms-private/`, which is blocked from direct web access; downloads are permission-checked.
 - Unlisted YouTube/Drive links can still be shared by a determined student; the watermark discourages it.
+- WhatsApp: the free mode never sends anything by itself; you tap Send in WhatsApp for each chat. Automatic sending needs a WhatsApp Business Cloud API number, an approved template with two body variables (name, link), and Meta's per-message charge. WhatsApp has no API for posting into normal groups, so groups are always one tap.

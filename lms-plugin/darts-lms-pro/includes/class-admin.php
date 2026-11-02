@@ -48,6 +48,7 @@ class DLMS_Admin {
 		}
 		add_submenu_page( 'dlms', 'Course setup', 'Course setup', $cap, 'dlms-course', array( __CLASS__, 'page_course' ) );
 		add_submenu_page( 'dlms', 'Live classes', 'Live classes', $cap, 'dlms-live', array( __CLASS__, 'page_live' ) );
+		add_submenu_page( 'dlms', 'WhatsApp', 'WhatsApp', $cap, 'dlms-whatsapp', array( 'DLMS_WhatsApp', 'page' ) );
 		add_submenu_page( 'dlms', 'Assignments', 'Assignments', $cap, 'dlms-assignments', array( __CLASS__, 'page_assignments' ) );
 		add_submenu_page( 'dlms', 'Gradebook', 'Gradebook', $cap, 'dlms-gradebook', array( __CLASS__, 'page_gradebook' ) );
 		add_submenu_page( 'dlms', 'Certificates', 'Certificates', $cap, 'dlms-certificates', array( __CLASS__, 'page_certificates' ) );
@@ -159,6 +160,7 @@ class DLMS_Admin {
 				$l = $c['lesson'];
 				echo '<tr><td><strong>' . esc_html( $l->post_title ) . '</strong><br><span class="dlms-muted">' . esc_html( get_the_title( $c['course'] ) ) . '</span></td><td>' . esc_html( DLMS_Hub::day_label( $c['start'] ) ) . '</td><td>';
 				echo dlms_meta( $l->ID, 'meet_link' ) ? '<a class="button" target="_blank" rel="noopener" href="' . esc_url( dlms_meta( $l->ID, 'meet_link' ) ) . '">Open Meet</a>' : '<span class="dlms-err">No Meet link</span>';
+				echo ' <a class="button" href="' . esc_url( DLMS_WhatsApp::compose_url( array( 'course' => $c['course'], 'link' => get_permalink( $l->ID ), 'tpl' => 'class' ) ) ) . '">Send on WhatsApp</a>';
 				echo ' <a class="button" href="' . esc_url( admin_url( 'admin.php?page=dlms-live&lesson=' . $l->ID ) ) . '">Attendance</a></td></tr>';
 			}
 			echo '</tbody></table>';
@@ -550,7 +552,7 @@ class DLMS_Admin {
 			echo '<tr><td><strong>' . esc_html( $l->post_title ) . '</strong><br><span class="dlms-pill dlms-state-' . esc_attr( $state ) . '">' . esc_html( $state ) . '</span></td><td>' . esc_html( dlms_date( $start ) ) . '</td>';
 			echo '<td>' . ( dlms_meta( $l->ID, 'meet_link' ) ? '<a href="' . esc_url( dlms_meta( $l->ID, 'meet_link' ) ) . '" target="_blank" rel="noopener">Open</a>' : '<span class="dlms-err">Missing</span>' ) . '</td>';
 			echo '<td>' . ( dlms_meta( $l->ID, 'recording_url' ) ? '✅' : ( 'ended' === $state ? '<span class="dlms-err">Add it</span>' : '–' ) ) . '</td>';
-			echo '<td>' . ( $start <= time() ? (int) $att . ' / ' . (int) $students : '–' ) . '</td><td><a class="button" href="' . esc_url( admin_url( 'admin.php?page=dlms-live&lesson=' . $l->ID ) ) . '">Attendance</a></td></tr>';
+			echo '<td>' . ( $start <= time() ? (int) $att . ' / ' . (int) $students : '–' ) . '</td><td><a class="button" href="' . esc_url( DLMS_WhatsApp::compose_url( array( 'course' => $cid, 'link' => get_permalink( $l->ID ), 'tpl' => dlms_meta( $l->ID, 'recording_url' ) && 'ended' === $state ? 'recording' : 'class' ) ) ) . '">Send on WhatsApp</a> <a class="button" href="' . esc_url( admin_url( 'admin.php?page=dlms-live&lesson=' . $l->ID ) ) . '">Attendance</a></td></tr>';
 		}
 		echo '</tbody></table></div>';
 	}
@@ -748,6 +750,12 @@ class DLMS_Admin {
 		echo '</div><div class="dlms-checks">';
 		echo $check( 'notify_welcome', 'Welcome email with password link (manual enrolment)' ) . $check( 'notify_enrolled', 'Enrolment confirmation' ) . $check( 'notify_receipt', 'Payment receipt (PDF attached)' ) . $check( 'notify_class', 'Live class reminder' ) . $check( 'notify_due', 'Fee due reminders' ) . $check( 'notify_graded', 'Assignment marked' ) . $check( 'notify_certificate', 'Certificate issued' ) . $check( 'notify_new_lesson', 'New lesson published' ); // phpcs:ignore
 		echo '</div><p class="dlms-muted">Emails go through WordPress. On Hostinger, install the free "WP Mail SMTP" plugin with your domain mailbox so they don\'t land in spam.</p></div>';
+
+		echo '<div class="dlms-panel"><h2 id="whatsapp">WhatsApp sending</h2>';
+		echo '<p>Free mode (default): the WhatsApp page prepares each message and you tap Send, for students and groups. Automatic mode uses the official WhatsApp Cloud API. It needs a Meta business number and an approved template whose body has {{1}} for the name and {{2}} for the link. Meta charges per message, and groups always stay one-tap.</p>';
+		echo '<div class="dlms-form-grid"><label>Mode<select name="s[wa_mode]"><option value="tap"' . selected( $o['wa_mode'], 'tap', false ) . '>Free: one tap per message</option><option value="api"' . selected( $o['wa_mode'], 'api', false ) . '>Automatic: WhatsApp Cloud API</option></select></label>';
+		echo $text( 'wa_phone_id', 'Cloud API phone number ID' ) . '<label>Cloud API access token<input type="password" name="s[wa_token]" value="' . esc_attr( $o['wa_token'] ) . '" autocomplete="off"></label>' . $text( 'wa_template', 'Template name' ) . $text( 'wa_template_lang', 'Template language code', 'text', 'e.g. en, en_US, ml' ); // phpcs:ignore
+		echo '</div></div>';
 
 		echo '<div class="dlms-panel"><h2>Students\' experience</h2><div class="dlms-checks">';
 		echo $check( 'lang_switch', 'Show the EN / മലയാളം switch' ) . $check( 'protect_enabled', 'Protect lesson pages (no right-click, no copy)' ) . $check( 'watermark_enabled', 'Watermark videos with the student\'s name and phone' ) . $check( 'pwa_enabled', 'Installable app (Add to Home screen)' ); // phpcs:ignore

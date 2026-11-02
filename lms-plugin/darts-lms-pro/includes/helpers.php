@@ -45,6 +45,11 @@ function dlms_default_settings() {
 		'default_lang'       => 'en',
 		'lang_switch'        => 1,
 		'max_upload_mb'      => 10,
+		'wa_mode'            => 'tap',
+		'wa_phone_id'        => '',
+		'wa_token'           => '',
+		'wa_template'        => '',
+		'wa_template_lang'   => 'en',
 	);
 }
 
