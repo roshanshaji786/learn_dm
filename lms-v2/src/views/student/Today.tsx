@@ -6,6 +6,7 @@ import { money, when, day, waLink, todayIST } from '../../lib/format'
 import { errText } from '../../lib/supabase'
 import { useTitle, Empty } from '../../components/ui'
 import { type StudentData, nextLive, joinOpen, gcalLink, joinClass, paidFor, upiLink } from './data'
+import { useView, PREVIEW_MSG } from './ctx'
 
 function useNow(ms = 1000) {
   const [n, setN] = useState(Date.now())
@@ -19,7 +20,8 @@ function useNow(ms = 1000) {
 export default function Today({ d }: { d: StudentData }) {
   const t = useT()
   useTitle(t('today'))
-  const profile = useStore((s) => s.profile)
+  const v = useView()
+  const profile = v.profile
   const settings = useStore((s) => s.settings)
   const say = useStore((s) => s.say)
   const now = useNow()
@@ -49,6 +51,7 @@ export default function Today({ d }: { d: StudentData }) {
 
   async function join() {
     if (!live) return
+    if (v.preview) return say(PREVIEW_MSG)
     setJoining(true)
     try {
       await joinClass(live.id)
@@ -65,7 +68,7 @@ export default function Today({ d }: { d: StudentData }) {
       </h1>
 
       {profile?.must_change_password && (
-        <a className="banner" href="#/app/me" style={{ color: 'inherit', textDecoration: 'none' }}>
+        <a className="banner" href={'#' + v.base + '/me'} style={{ color: 'inherit', textDecoration: 'none' }}>
           <KeyRound size={18} />
           <div className="grow">{t('mustChange')}</div>
           <ChevronRight size={18} />
@@ -127,7 +130,7 @@ export default function Today({ d }: { d: StudentData }) {
                 ))}
               </div>
             )}
-            <button className="btn btn-wa btn-block" onClick={join} disabled={!open || joining || st?.fee_locked}>
+            <button className="btn btn-wa btn-block" onClick={join} disabled={(!open && !v.preview) || joining || st?.fee_locked}>
               <Video size={20} />
               {open ? t('join') : t('joinSoon')}
             </button>
@@ -135,7 +138,7 @@ export default function Today({ d }: { d: StudentData }) {
               <a className="btn btn-sm btn-ghost grow" href={gcalLink(live, liveCourse?.title ?? '')} target="_blank" rel="noopener">
                 <CalendarPlus size={16} /> {t('addCal')}
               </a>
-              <a className="btn btn-sm btn-ghost grow" href={`#/app/lesson/${live.id}`}>
+              <a className="btn btn-sm btn-ghost grow" href={`#${v.base}/lesson/${live.id}`}>
                 {t('lesson')} <ChevronRight size={16} />
               </a>
             </div>
@@ -152,7 +155,7 @@ export default function Today({ d }: { d: StudentData }) {
           const done = ls.filter((l) => d.states[l.id]?.completed).length
           const pct = ls.length ? Math.round((done / ls.length) * 100) : 0
           return (
-            <a className="card" key={c.id} href="#/app/learn" style={{ color: 'inherit', textDecoration: 'none' }}>
+            <a className="card" key={c.id} href={'#' + v.base + '/learn'} style={{ color: 'inherit', textDecoration: 'none' }}>
               <div className="row nowrap">
                 <b className="grow ellipsis">{c.title}</b>
                 <span className="badge brand">{pct}%</span>
@@ -171,7 +174,7 @@ export default function Today({ d }: { d: StudentData }) {
       {cont && (
         <>
           <h2 className="h-sub">{t('continueL')}</h2>
-          <a className="item" href={`#/app/lesson/${cont.id}`}>
+          <a className="item" href={`#${v.base}/lesson/${cont.id}`}>
             <span className="ic">
               <CirclePlay size={20} />
             </span>

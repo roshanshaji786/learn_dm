@@ -9,6 +9,7 @@ import { useTitle, Field, Spinner } from '../../components/ui'
 import { LessonFiles } from '../../components/Files'
 import type { LessonContent } from '../../lib/types'
 import { type StudentData, joinOpen, joinClass, gcalLink } from './data'
+import { useView, PREVIEW_MSG } from './ctx'
 
 export function Linkify({ text }: { text: string }) {
   const parts = text.split(/(https?:\/\/[^\s)]+)/g)
@@ -26,7 +27,8 @@ export function Linkify({ text }: { text: string }) {
 
 export default function LessonView({ id, d, reload }: { id: string; d: StudentData; reload: () => Promise<void> }) {
   const t = useT()
-  const profile = useStore((s) => s.profile)
+  const v = useView()
+  const profile = v.profile
   const say = useStore((s) => s.say)
   const l = d.lessons.find((x) => x.id === id)
   const s = d.states[id]
@@ -40,7 +42,7 @@ export default function LessonView({ id, d, reload }: { id: string; d: StudentDa
 
   if (!l)
     return (
-      <a className="linkish" href="#/app/learn">
+      <a className="linkish" href={'#' + v.base + '/learn'}>
         <ArrowLeft size={18} /> {t('back')}
       </a>
     )
@@ -52,6 +54,7 @@ export default function LessonView({ id, d, reload }: { id: string; d: StudentDa
   const upcoming = l.live_start && new Date(l.live_start).getTime() + l.duration_min * 60000 > Date.now()
 
   async function toggleDone() {
+    if (v.preview) return say(PREVIEW_MSG)
     setBusy(true)
     const r = s?.completed
       ? await supabase.from('lms_progress').delete().eq('lesson_id', id).eq('user_id', profile!.user_id)
@@ -63,7 +66,7 @@ export default function LessonView({ id, d, reload }: { id: string; d: StudentDa
 
   return (
     <>
-      <a className="linkish" href="#/app/learn">
+      <a className="linkish" href={'#' + v.base + '/learn'}>
         <ArrowLeft size={18} /> {mod?.title ?? t('back')}
       </a>
       <h1 style={{ fontSize: 24 }}>{l.title}</h1>
@@ -86,8 +89,9 @@ export default function LessonView({ id, d, reload }: { id: string; d: StudentDa
             <div className="card mt16 stack">
               <button
                 className="btn btn-wa btn-block"
-                disabled={!joinOpen(l) || busy}
+                disabled={(!joinOpen(l) && !v.preview) || busy}
                 onClick={async () => {
+                  if (v.preview) return say(PREVIEW_MSG)
                   setBusy(true)
                   try {
                     await joinClass(l.id)
@@ -144,7 +148,7 @@ export default function LessonView({ id, d, reload }: { id: string; d: StudentDa
             )}
           </button>
           {next && (
-            <a className="btn btn-ghost btn-block mt8" href={`#/app/lesson/${next.id}`}>
+            <a className="btn btn-ghost btn-block mt8" href={`#${v.base}/lesson/${next.id}`}>
               {next.title}
             </a>
           )}
@@ -156,7 +160,8 @@ export default function LessonView({ id, d, reload }: { id: string; d: StudentDa
 
 function Assignment({ d, lessonId, text, max, dueDays, opensAt, reload }: { d: StudentData; lessonId: string; text: string; max: number | null; dueDays: number | null; opensAt: string | null; reload: () => Promise<void> }) {
   const t = useT()
-  const profile = useStore((s) => s.profile)!
+  const v = useView()
+  const profile = v.profile!
   const say = useStore((s) => s.say)
   const sub = d.submissions.find((s) => s.lesson_id === lessonId)
   const [answer, setAnswer] = useState(sub?.answer ?? '')
@@ -175,6 +180,7 @@ function Assignment({ d, lessonId, text, max, dueDays, opensAt, reload }: { d: S
 
   async function submit(e: React.FormEvent) {
     e.preventDefault()
+    if (v.preview) return say(PREVIEW_MSG)
     if (!answer.trim() && !link.trim() && !file && !sub?.file_path) return say('Add an answer, a link or a file', true)
     if (file && file.size > 10 * 1024 * 1024) return say('File is larger than 10 MB', true)
     setBusy(true)

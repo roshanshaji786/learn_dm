@@ -3,8 +3,10 @@ import { useT } from '../../lib/i18n'
 import { day } from '../../lib/format'
 import { useTitle, Empty } from '../../components/ui'
 import type { StudentData } from './data'
+import { useView } from './ctx'
 
 export default function Tasks({ d }: { d: StudentData }) {
+  const v = useView()
   const t = useT()
   useTitle(t('tasks'))
   const rows = d.lessons
@@ -25,7 +27,7 @@ export default function Tasks({ d }: { d: StudentData }) {
       </>
     )
   const Row = ({ r }: { r: (typeof rows)[number] }) => (
-    <a className="item noicon" href={`#/app/lesson/${r.l.id}`}>
+    <a className="item noicon" href={`#${v.base}/lesson/${r.l.id}`}>
       <span style={{ minWidth: 0 }}>
         <div className="t ellipsis">{r.l.title}</div>
         <div className="s">

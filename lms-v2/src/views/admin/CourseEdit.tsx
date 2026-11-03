@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { ArrowLeft, Plus, Pencil, Trash, ChevronRight, Video, Lock, ClipboardList, ExternalLink } from 'lucide-react'
+import { ArrowLeft, Plus, Pencil, Trash, ChevronRight, Video, Lock, ClipboardList, ExternalLink, Eye } from 'lucide-react'
 import { supabase, errText } from '../../lib/supabase'
 import { useLoad } from '../../lib/useLoad'
 import { useStore } from '../../lib/store'
@@ -67,6 +67,12 @@ export default function CourseEdit({ id }: { id: string | null }) {
           </a>
         )}
       </div>
+
+      {c && (
+        <a className="btn btn-ghost btn-block" href={`#/admin/view/course/${c.id}`} style={{ marginBottom: 12 }}>
+          <Eye size={18} /> Preview as a student
+        </a>
+      )}
 
       {c && data && (
         <>

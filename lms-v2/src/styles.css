@@ -327,3 +327,7 @@ table.t tr:last-child td { border-bottom: 0; }
 .spin { width: 22px; height: 22px; border: 3px solid var(--line); border-top-color: var(--brand); border-radius: 50%; animation: rot .8s linear infinite; margin: 40px auto; }
 @keyframes rot { to { transform: rotate(360deg); } }
 @media (max-width: 380px) { .logo span { font-size: 13px; } }
+
+/* Admin "view as student" strip */
+.view-as { display: flex; align-items: center; gap: 8px; padding: 8px 16px; font-size: 13px; background: var(--brand, #7c3aed); color: #fff; }
+.view-as a { display: inline-flex; align-items: center; gap: 4px; color: #fff; font-weight: 600; text-decoration: none; padding: 4px 10px; border-radius: 99px; background: rgba(255, 255, 255, 0.18); white-space: nowrap; }

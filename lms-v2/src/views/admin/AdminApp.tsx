@@ -11,9 +11,11 @@ import Attendance from './Attendance'
 import Marking from './Marking'
 import WhatsApp from './WhatsApp'
 import Settings from './Settings'
+import ViewAs from './ViewAs'
 
 export default function AdminApp({ parts }: { parts: string[] }) {
   const [p0, p1, p2] = parts
+  if (p0 === 'view') return <ViewAs parts={parts.slice(1)} />
   let body
   if (p0 === 'students' && p1) body = <StudentDetail id={p1} />
   else if (p0 === 'students') body = <Students />
@@ -33,7 +35,7 @@ export default function AdminApp({ parts }: { parts: string[] }) {
       <header className="topbar">
         <div className="wrap">
           <Logo sub="Admin" />
-          <a className="icon-btn" href="#/app" aria-label="Student view">
+          <a className="icon-btn" href="#/admin/view" aria-label="Student view">
             <GraduationCap size={18} />
           </a>
           <a className="icon-btn" href="#/admin/settings" aria-label="Settings">

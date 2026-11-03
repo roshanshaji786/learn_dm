@@ -13,18 +13,25 @@ export type StudentData = {
   certificates: Certificate[]
 }
 
-export async function loadStudent(userId: string): Promise<StudentData> {
-  const enrolments = (must(await supabase.from('lms_enrolments').select('*').eq('user_id', userId).neq('status', 'cancelled').order('created_at')) as Enrolment[]) ?? []
+// mode: 'self' (signed-in student), 'admin' (admin viewing a student), 'course' (admin previewing a course as a new student; userId = course id).
+export async function loadStudent(userId: string, mode: 'self' | 'admin' | 'course' = 'self'): Promise<StudentData> {
+  const enrolments =
+    mode === 'course'
+      ? [{ id: 'preview', user_id: '', course_id: userId, status: 'active', total_fee: 0, due_date: null, created_at: new Date().toISOString() } as unknown as Enrolment]
+      : ((must(await supabase.from('lms_enrolments').select('*').eq('user_id', userId).neq('status', 'cancelled').order('created_at')) as Enrolment[]) ?? [])
+  const none = mode === 'course' ? '00000000-0000-0000-0000-000000000000' : userId
   const ids = enrolments.map((e) => e.course_id)
   if (!ids.length) return { enrolments, courses: [], modules: [], lessons: [], states: {}, payments: [], submissions: [], certificates: [] }
   const [c, m, l, p, s, ce, ...st] = await Promise.all([
     supabase.from('lms_courses').select('*').in('id', ids).order('sort'),
     supabase.from('lms_modules').select('*').in('course_id', ids).order('sort'),
     supabase.from('lms_lessons').select('*').in('course_id', ids).eq('published', true).order('sort'),
-    supabase.from('lms_payments').select('*').in('enrolment_id', enrolments.map((e) => e.id)).order('paid_on', { ascending: false }),
-    supabase.from('lms_submissions').select('*').eq('user_id', userId),
-    supabase.from('lms_certificates').select('*').eq('user_id', userId),
-    ...ids.map((id) => supabase.rpc('lms_my_lessons', { p_course: id })),
+    supabase.from('lms_payments').select('*').in('enrolment_id', mode === 'course' ? [none] : enrolments.map((e) => e.id)).order('paid_on', { ascending: false }),
+    supabase.from('lms_submissions').select('*').eq('user_id', none),
+    supabase.from('lms_certificates').select('*').eq('user_id', none),
+    ...ids.map((id) =>
+      mode === 'self' ? supabase.rpc('lms_my_lessons', { p_course: id }) : supabase.rpc('lms_view_lessons', { p_course: id, p_user: mode === 'admin' ? userId : null }),
+    ),
   ])
   const states: Record<string, LessonState> = {}
   for (const r of st) for (const row of (must(r) as LessonState[]) ?? []) states[row.lesson_id] = row

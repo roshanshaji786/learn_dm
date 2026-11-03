@@ -1,4 +1,4 @@
-import { House, BookOpen, ClipboardList, User, LayoutDashboard } from 'lucide-react'
+import { House, BookOpen, ClipboardList, User, LayoutDashboard, Eye, X } from 'lucide-react'
 import { useStore } from '../../lib/store'
 import { useT } from '../../lib/i18n'
 import { useLoad } from '../../lib/useLoad'
@@ -10,12 +10,18 @@ import Learn from './Learn'
 import LessonView from './LessonView'
 import Tasks from './Tasks'
 import Me from './Me'
+import { StudentCtx, type StudentView } from './ctx'
 
-export default function StudentApp({ parts }: { parts: string[] }) {
+// Set when an admin views the app as a student (read-only).
+export type ViewAs = StudentView & { mode: 'admin' | 'course'; id: string; exit: string; label: string }
+
+export default function StudentApp({ parts, viewAs }: { parts: string[]; viewAs?: ViewAs }) {
   const t = useT()
   const session = useStore((s) => s.session)!
   const isAdmin = useStore((s) => s.isAdmin)
-  const { data, loading, error, reload } = useLoad(() => loadStudent(session.user.id), [session.user.id])
+  const who = viewAs ? viewAs.id : session.user.id
+  const { data, loading, error, reload } = useLoad(() => loadStudent(who, viewAs?.mode ?? 'self'), [who, viewAs?.mode])
+  const base = viewAs?.base ?? '/app'
   const [p0, p1] = parts
   const tab = p0 === 'lesson' ? 'learn' : p0 || 'today'
 
@@ -32,12 +38,23 @@ export default function StudentApp({ parts }: { parts: string[] }) {
   else body = <Today d={data} />
 
   return (
-    <>
+    <StudentCtx.Provider value={viewAs ?? null}>
+      {viewAs && (
+        <div className="view-as">
+          <Eye size={16} />
+          <span className="grow ellipsis">
+            Viewing as <b>{viewAs.label}</b> · read-only
+          </span>
+          <a href={'#' + viewAs.exit} aria-label="Exit student view">
+            <X size={16} /> Exit
+          </a>
+        </div>
+      )}
       <header className="topbar">
         <div className="wrap">
           <Logo sub={t('myLearning')} />
           <LangToggle />
-          {isAdmin && (
+          {isAdmin && !viewAs && (
             <a className="icon-btn" href="#/admin" aria-label="Admin">
               <LayoutDashboard size={18} />
             </a>
@@ -47,12 +64,12 @@ export default function StudentApp({ parts }: { parts: string[] }) {
       <main className="wrap app-main narrow">{body}</main>
       <TabBar
         tabs={[
-          { to: '/app', label: t('today'), icon: <House size={22} />, active: tab === 'today' },
-          { to: '/app/learn', label: t('learn'), icon: <BookOpen size={22} />, active: tab === 'learn' },
-          { to: '/app/tasks', label: t('tasks'), icon: <ClipboardList size={22} />, active: tab === 'tasks', dot: pendingTasks },
-          { to: '/app/me', label: t('me'), icon: <User size={22} />, active: tab === 'me' },
+          { to: base, label: t('today'), icon: <House size={22} />, active: tab === 'today' },
+          { to: base + '/learn', label: t('learn'), icon: <BookOpen size={22} />, active: tab === 'learn' },
+          { to: base + '/tasks', label: t('tasks'), icon: <ClipboardList size={22} />, active: tab === 'tasks', dot: pendingTasks },
+          { to: base + '/me', label: t('me'), icon: <User size={22} />, active: tab === 'me' },
         ]}
       />
-    </>
+    </StudentCtx.Provider>
   )
 }

@@ -8,11 +8,13 @@ import { go } from '../../lib/route'
 import { useTitle, Field, ThemeSeg, LangToggle } from '../../components/ui'
 import { receiptPdf, certificatePdf } from '../../lib/pdf'
 import { type StudentData, paidFor } from './data'
+import { useView, PREVIEW_MSG } from './ctx'
 
 export default function Me({ d, reload }: { d: StudentData; reload: () => Promise<void> }) {
   const t = useT()
   useTitle(t('me'))
-  const profile = useStore((s) => s.profile)!
+  const v = useView()
+  const profile = v.profile!
   const settings = useStore((s) => s.settings)
   const say = useStore((s) => s.say)
   const [pw, setPw] = useState('')
@@ -20,6 +22,7 @@ export default function Me({ d, reload }: { d: StudentData; reload: () => Promis
 
   async function changePw(e: React.FormEvent) {
     e.preventDefault()
+    if (v.preview) return say(PREVIEW_MSG)
     if (pw.length < 8) return say(t('newPw'), true)
     setBusy('pw')
     const { error } = await supabase.auth.updateUser({ password: pw, data: { must_change_password: false } })
@@ -32,6 +35,7 @@ export default function Me({ d, reload }: { d: StudentData; reload: () => Promis
   }
 
   async function claim(courseId: string) {
+    if (v.preview) return say(PREVIEW_MSG)
     setBusy('cert' + courseId)
     const { error } = await supabase.rpc('lms_claim_certificate', { p_course: courseId })
     setBusy('')
@@ -188,6 +192,7 @@ export default function Me({ d, reload }: { d: StudentData; reload: () => Promis
         <a className="btn btn-wa btn-block" href={waLink(settings.whatsapp, 'Hi Roshan, I need help with the learning app.')} target="_blank" rel="noopener">
           <MessageCircle size={18} /> {t('help')}
         </a>
+        {!v.preview && (
         <button
           className="btn btn-danger btn-block"
           onClick={async () => {
@@ -197,6 +202,7 @@ export default function Me({ d, reload }: { d: StudentData; reload: () => Promis
         >
           <LogOut size={18} /> {t('logout')}
         </button>
+        )}
       </div>
     </>
   )

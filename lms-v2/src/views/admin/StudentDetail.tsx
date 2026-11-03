@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { ArrowLeft, MessageCircle, KeyRound, Plus, Download, Trash, Pencil, Award } from 'lucide-react'
+import { ArrowLeft, MessageCircle, KeyRound, Plus, Download, Trash, Pencil, Award, Eye } from 'lucide-react'
 import { supabase, callAdmin, errText } from '../../lib/supabase'
 import { useLoad } from '../../lib/useLoad'
 import { useStore } from '../../lib/store'
@@ -85,6 +85,9 @@ export default function StudentDetail({ id }: { id: string }) {
             <KeyRound size={16} /> New PIN
           </button>
         </div>
+        <a className="btn btn-sm btn-ghost btn-block mt8" href={`#/admin/view/${p.user_id}`}>
+          <Eye size={16} /> View as this student
+        </a>
       </div>
 
       {data.enrolments.map((e) => {

@@ -4,6 +4,7 @@ import { when, day } from '../../lib/format'
 import { useTitle, Empty } from '../../components/ui'
 import type { Lesson } from '../../lib/types'
 import type { StudentData } from './data'
+import { useView } from './ctx'
 
 export default function Learn({ d }: { d: StudentData }) {
   const t = useT()
@@ -49,6 +50,7 @@ export default function Learn({ d }: { d: StudentData }) {
 }
 
 function LessonRow({ l, n, d }: { l: Lesson; n: number; d: StudentData }) {
+  const v = useView()
   const t = useT()
   const s = d.states[l.id]
   const unlocked = s?.unlocked
@@ -64,7 +66,7 @@ function LessonRow({ l, n, d }: { l: Lesson; n: number; d: StudentData }) {
         ? t('assignment')
         : ''
   return (
-    <a className="item" href={`#/app/lesson/${l.id}`}>
+    <a className="item" href={`#${v.base}/lesson/${l.id}`}>
       <span className={'ic' + (s?.completed ? ' ok' : !unlocked ? ' lock' : '')}>{s?.completed ? <CircleCheck size={20} /> : !unlocked ? <Lock size={18} /> : n}</span>
       <span style={{ minWidth: 0 }}>
         <div className="t ellipsis">{l.title}</div>
