@@ -109,9 +109,21 @@ export type WaRow = {
   label: string
   target: string | null
   message: string
-  status: 'pending' | 'sent' | 'skipped' | 'no_phone'
+  status: 'pending' | 'sending' | 'sent' | 'skipped' | 'no_phone' | 'failed'
+  auto: boolean
+  error: string | null
+  attempts: number
   created_at: string
   sent_at: string | null
+}
+
+export type WaWorker = {
+  id: 'main'
+  state: 'offline' | 'starting' | 'need_link' | 'ready' | 'paused'
+  linked_phone: string | null
+  info: string | null
+  sent_today: number
+  last_seen: string | null
 }
 
 export type Settings = Record<string, string>

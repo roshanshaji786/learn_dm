@@ -1,0 +1,15 @@
+{
+  "name": "darts-lms-wa-sender",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Sends the Darts LMS WhatsApp queue from Roshan's own WhatsApp (linked device), no API needed.",
+  "type": "module",
+  "main": "sender.mjs",
+  "engines": { "node": ">=20" },
+  "scripts": { "start": "node sender.mjs" },
+  "dependencies": {
+    "@whiskeysockets/baileys": "7.0.0-rc14",
+    "pino": "9.7.0",
+    "qrcode": "1.5.4"
+  }
+}

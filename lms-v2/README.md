@@ -47,6 +47,6 @@ Vercel project `darts-lms`, root directory `lms-v2`. Pushes deploy automatically
 ## Known limits
 
 - Meet links are pasted per lesson; nothing creates them automatically.
-- WhatsApp messages are sent by tapping each one (free WhatsApp has no sending API).
+- WhatsApp messages are sent by tapping each one, or automatically by the laptop sender in `wa-sender/` (Baileys linked device, see its README).
 - Free plans: Supabase pauses a project after a week with no traffic, and has 500 MB database / 1 GB file storage.
 - Supabase advisor notes two unindexed foreign keys (info level, fine at this size).

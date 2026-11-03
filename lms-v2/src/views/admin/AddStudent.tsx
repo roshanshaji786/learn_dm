@@ -1,11 +1,12 @@
 import { useState } from 'react'
-import { MessageCircle, Copy } from 'lucide-react'
+import { MessageCircle, Copy, Laptop } from 'lucide-react'
 import { supabase, callAdmin, errText } from '../../lib/supabase'
 import { useStore } from '../../lib/store'
 import { waLink, todayIST } from '../../lib/format'
 import { go } from '../../lib/route'
 import { Sheet, Field } from '../../components/ui'
 import { loginMessage, type Course } from './data'
+import { useSender, queueAuto } from './WhatsApp'
 
 type Created = { user_id: string; temp_password: string | null; pin: string | null; existing: boolean }
 
@@ -15,6 +16,8 @@ export function AddStudentSheet({ courses, onClose, onDone }: { courses: Course[
   const [busy, setBusy] = useState(false)
   const [err, setErr] = useState('')
   const [done, setDone] = useState<{ c: Created; name: string; email: string; phone: string } | null>(null)
+  const [autoSent, setAutoSent] = useState(false)
+  const sender = useSender()
   const set = (k: keyof typeof f) => (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => setF({ ...f, [k]: e.target.value })
 
   async function submit(e: React.FormEvent) {
@@ -55,6 +58,20 @@ export function AddStudentSheet({ courses, onClose, onDone }: { courses: Course[
           {msg}
         </pre>
         <div className="stack mt12">
+          {sender?.last_seen && (
+            <button
+              className="btn btn-primary btn-block"
+              disabled={autoSent}
+              onClick={async () => {
+                const r = await queueAuto(done.name, done.phone, msg, done.c.user_id)
+                if (r.error) return say(errText(r.error), true)
+                setAutoSent(true)
+                say('Queued. The laptop sender will send it.')
+              }}
+            >
+              <Laptop size={18} /> {autoSent ? 'Queued for the laptop sender' : 'Send automatically'}
+            </button>
+          )}
           <a className="btn btn-wa btn-block" href={waLink(done.phone, msg)} target="_blank" rel="noopener">
             <MessageCircle size={18} /> Send on WhatsApp
           </a>
