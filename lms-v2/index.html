@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Darts AI Academy · Learn</title>
+    <meta name="description" content="Live, mentor-led AI and digital marketing courses with Roshan Shaji. Malayalam & English. Classes, recordings, assignments and certificates in one app." />
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0f0a1e" media="(prefers-color-scheme: dark)" />
+    <link rel="icon" type="image/png" href="/icons/favicon-64.png" />
+    <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
+    <meta property="og:title" content="Darts AI Academy · Advanced Digital Marketing with AI" />
+    <meta property="og:description" content="Live, mentor-led classes with Roshan. Malayalam & English. AI tools in every module." />
+    <meta property="og:image" content="/img/adm-cover.jpg" />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <script>
+      try {
+        var t = localStorage.getItem('lms-theme')
+        if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t
+        var l = new URLSearchParams(location.search).get('lang') || localStorage.getItem('lms-lang')
+        if (l === 'ml') document.documentElement.lang = 'ml'
+      } catch (e) {}
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <noscript>Please turn on JavaScript, or message us on WhatsApp at +91 70120 45854.</noscript>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
